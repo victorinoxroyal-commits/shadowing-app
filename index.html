@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shadowing Driver</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; background: #121212; color: white; padding: 20px; }
+        button { background: #007bff; color: white; border: none; padding: 15px 30px; font-size: 18px; border-radius: 8px; margin: 10px; cursor: pointer; }
+        .phrase { font-size: 24px; margin: 30px 0; color: #00ffcc; }
+    </style>
+</head>
+<body>
+
+    <h1>Shadowing en Ruta</h1>
+    <div class="phrase" id="displayPhrase">Presiona "Iniciar" para comenzar</div>
+    
+    <button onclick="startShadowing()">Iniciar Práctica</button>
+    <button onclick="stopShadowing()" style="background: #dc3545;">Detener</button>
+
+    <script>
+        // Lista de frases cortas para repetición
+        const phrases = [
+            "Leave it at the door",
+            "On my way",
+            "Your order is here",
+            "I am at the gate",
+            "Which apartment number?",
+            "Leaving it by the door",
+            "Have a great day"
+        ];
+
+        let currentIndex = 0;
+        let isRunning = false;
+        const synth = window.speechSynthesis;
+
+        function speakPhrase(text, callback) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US'; // Voz en inglés estadounidense
+            utterance.rate = 0.9;      // Velocidad ligeramente controlada
+            
+            utterance.onend = () => {
+                // Pausa de 3 segundos para que puedas hacer el shadowing
+                setTimeout(callback, 3000); 
+            };
+
+            synth.speak(utterance);
+        }
+
+        function playLoop() {
+            if (!isRunning) return;
+
+            const currentPhrase = phrases[currentIndex];
+            document.getElementById('displayPhrase').innerText = currentPhrase;
+
+            let repeatCount = 0;
+
+            function repeat() {
+                if (!isRunning) return;
+
+                if (repeatCount < 3) { // Repite la misma frase 3 veces
+                    repeatCount++;
+                    speakPhrase(currentPhrase, repeat);
+                } else {
+                    // Pasa a la siguiente frase en la lista
+                    currentIndex = (currentIndex + 1) % phrases.length;
+                    playLoop();
+                }
+            }
+
+            repeat();
+        }
+
+        function startShadowing() {
+            if (isRunning) return;
+            isRunning = true;
+            playLoop();
+        }
+
+        function stopShadowing() {
+            isRunning = false;
+            synth.cancel();
+            document.getElementById('displayPhrase').innerText = "Detenido";
+        }
+    </script>
+</body>
+</html>
