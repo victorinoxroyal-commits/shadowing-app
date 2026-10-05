@@ -9,52 +9,128 @@
     <meta name="apple-mobile-web-app-title" content="Shadowing">
     <link rel="apple-touch-icon" href="https://img.icons8.com/color/180/000000/headphones.png">
     
-    <title>Shadowing Driver</title>
+    <title>Shadowing Driver & Habits</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; background: #121212; color: white; padding: 20px; margin: 0; }
         h1 { font-size: 24px; margin-bottom: 10px; color: #f8f9fa; }
+        
+        /* Navegación por pestañas */
+        .nav-tabs { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
+        .tab-btn { background: #2a2a2a; color: #aaa; border: 1px solid #444; padding: 10px 20px; font-size: 16px; border-radius: 8px; cursor: pointer; transition: 0.3s; }
+        .tab-btn.active { background: #00ffcc; color: #121212; border-color: #00ffcc; font-weight: bold; }
+        
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* Estilos de Shadowing */
         .category-container { margin: 15px 0; }
         select { background: #2a2a2a; color: #00ffcc; border: 1px solid #00ffcc; padding: 12px; font-size: 16px; border-radius: 8px; width: 90%; max-width: 400px; outline: none; }
         .phrase-card { background: #1e1e1e; border-radius: 12px; padding: 25px 15px; margin: 20px auto; max-width: 500px; min-height: 120px; display: flex; flex-direction: column; justify-content: center; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
         .phrase { font-size: 22px; color: #00ffcc; font-weight: bold; margin-bottom: 8px; }
         .translation { font-size: 16px; color: #aaa; font-style: italic; }
+        .counter { font-size: 13px; color: #00ffcc; margin-top: 8px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
         .controls { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: 15px; }
-        button { border: none; padding: 14px 22px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; transition: 0.2s; }
+        button { border: none; padding: 14px 20px; font-size: 15px; font-weight: bold; border-radius: 8px; cursor: pointer; transition: 0.2s; }
         .btn-start { background: #28a745; color: white; }
+        .btn-pause { background: #17a2b8; color: white; }
         .btn-slow { background: #ffc107; color: #121212; }
         .btn-stop { background: #dc3545; color: white; }
         button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        /* Estilos de la Tabla de Hábitos */
+        .habits-container { overflow-x: auto; max-width: 600px; margin: 0 auto; background: #1e1e1e; padding: 15px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        table { width: 100%; border-collapse: collapse; color: white; }
+        th, td { border: 1px solid #333; padding: 10px 5px; text-align: center; }
+        th { background: #2a2a2a; color: #00ffcc; font-size: 14px; }
+        .habit-title { text-align: left; font-size: 13px; font-weight: bold; padding-left: 8px; }
+        .habit-desc { font-size: 11px; color: #888; display: block; font-weight: normal; }
+        
+        /* Checkbox personalizado estilo toggle */
+        .chk-state { display: none; }
+        .state-btn { width: 32px; height: 32px; border-radius: 6px; border: 1px solid #444; background: #2a2a2a; display: flex; align-items: center; justify-content: center; margin: 0 auto; cursor: pointer; font-weight: bold; font-size: 16px; user-select: none; }
+        .state-btn.done { background: #28a745; color: white; border-color: #28a745; }
+        .state-btn.fail { background: #dc3545; color: white; border-color: #dc3545; }
+        
+        .reset-btn { margin-top: 20px; background: #333; color: #aaa; padding: 10px 15px; font-size: 13px; }
     </style>
 </head>
 <body>
 
-    <h1>Shadowing en Ruta</h1>
-    
-    <div class="category-container">
-        <label for="categorySelect" style="display:block; margin-bottom:8px; color:#ccc;">Selecciona Categoría:</label>
-        <select id="categorySelect" onchange="changeCategory()">
-            <option value="delivery">🚚 Trabajo (Deliveries)</option>
-            <option value="questions">❓ Preguntas y Conversación</option>
-            <option value="compliments">😊 Cumplidos y Amabilidad</option>
-            <option value="gym">🏋️ Gimnasio (Gym)</option>
-            <option value="pool">🏊 Piscina / Áreas Recreativas</option>
-            <option value="restaurant">🍽️ Restaurantes y Bares</option>
-            <option value="nightlife">🕺 Discoteca / Salidas</option>
-        </select>
+    <div class="nav-tabs">
+        <button class="tab-btn active" onclick="switchTab('shadowingTab', this)">🗣️ Shadowing</button>
+        <button class="tab-btn" onclick="switchTab('habitsTab', this)">📊 Hábitos</button>
     </div>
 
-    <div class="phrase-card">
-        <div class="phrase" id="displayPhrase">Presiona "Iniciar" para comenzar</div>
-        <div class="translation" id="displayTranslation"></div>
+    <!-- PESTAÑA 1: SHADOWING -->
+    <div id="shadowingTab" class="tab-content active">
+        <h1>Shadowing en Ruta</h1>
+        
+        <div class="category-container">
+            <label for="categorySelect" style="display:block; margin-bottom:8px; color:#ccc;">Selecciona Categoría:</label>
+            <select id="categorySelect" onchange="changeCategory()">
+                <option value="delivery">🚚 Trabajo (Deliveries)</option>
+                <option value="questions">❓ Preguntas y Conversación</option>
+                <option value="compliments">😊 Cumplidos y Amabilidad</option>
+                <option value="gym">🏋️ Gimnasio (Gym)</option>
+                <option value="pool">🏊 Piscina / Áreas Recreativas</option>
+                <option value="restaurant">🍽️ Restaurantes y Bares</option>
+                <option value="nightlife">🕺 Discoteca / Salidas</option>
+            </select>
+        </div>
+
+        <div class="phrase-card">
+            <div class="phrase" id="displayPhrase">Presiona "Iniciar" para comenzar</div>
+            <div class="translation" id="displayTranslation"></div>
+            <div class="counter" id="displayCounter"></div>
+        </div>
+        
+        <div class="controls">
+            <button class="btn-start" id="btnStart" onclick="startShadowing()">Iniciar</button>
+            <button class="btn-pause" id="btnPause" onclick="togglePause()" disabled>Pausar</button>
+            <button class="btn-slow" id="btnSlow" onclick="toggleSlow()">Modo Lento: OFF</button>
+            <button class="btn-stop" id="btnStop" onclick="stopShadowing()" disabled>Detener</button>
+        </div>
     </div>
-    
-    <div class="controls">
-        <button class="btn-start" onclick="startShadowing()">Iniciar</button>
-        <button class="btn-slow" onclick="toggleSlow()">Modo Lento: OFF</button>
-        <button class="btn-stop" onclick="stopShadowing()">Detener</button>
+
+    <!-- PESTAÑA 2: HÁBITOS -->
+    <div id="habitsTab" class="tab-content">
+        <h1>Registro Semanal</h1>
+        <div class="habits-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 35%;">Métrica</th>
+                        <th>L</th>
+                        <th>M</th>
+                        <th>M</th>
+                        <th>J</th>
+                        <th>V</th>
+                        <th>S</th>
+                        <th>D</th>
+                    </tr>
+                </thead>
+                <tbody id="habitsBody">
+                    <!-- Filas generadas por JS -->
+                </tbody>
+            </table>
+            <button class="reset-btn" onclick="resetHabits()">Reiniciar Semana</button>
+        </div>
     </div>
 
     <script>
+        // --- NAVEGACIÓN PESTAÑAS ---
+        function switchTab(tabId, btn) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            btn.classList.add('active');
+            
+            if(tabId !== 'shadowingTab') {
+                stopShadowing();
+            }
+        }
+
+        // --- MÓDULO SHADOWING ---
         const categories = {
             delivery: [
                 { en: "Leave it at the door", es: "Déjelo en la puerta" },
@@ -122,75 +198,188 @@
 
         let currentCategory = "delivery";
         let currentIndex = 0;
+        let repeatCount = 0;
         let isRunning = false;
+        let isPaused = false;
         let isSlow = false;
+        let speechTimer = null;
         const synth = window.speechSynthesis;
+
+        function updateButtons() {
+            document.getElementById('btnStart').disabled = isRunning;
+            document.getElementById('btnPause').disabled = !isRunning;
+            document.getElementById('btnStop').disabled = !isRunning && !isPaused;
+            document.getElementById('btnPause').innerText = isPaused ? "Reanudar" : "Pausar";
+        }
 
         function changeCategory() {
             stopShadowing();
             currentCategory = document.getElementById('categorySelect').value;
             currentIndex = 0;
+            repeatCount = 0;
             document.getElementById('displayPhrase').innerText = "Categoría lista. Presiona Iniciar.";
             document.getElementById('displayTranslation').innerText = "";
+            document.getElementById('displayCounter').innerText = "";
         }
 
-        function speakPhrase(text, callback) {
+        function speakPhrase(text, onEndCallback) {
+            synth.cancel();
+            clearTimeout(speechTimer);
+
             const utterance = new SpeechSynthesisUtterance(text);
             utterance.lang = 'en-US';
             utterance.rate = isSlow ? 0.7 : 0.95;
-            
+
             utterance.onend = () => {
-                setTimeout(callback, 3000);
+                if (isRunning && !isPaused) {
+                    speechTimer = setTimeout(onEndCallback, 3000);
+                }
+            };
+
+            utterance.onerror = () => {
+                if (isRunning && !isPaused) {
+                    speechTimer = setTimeout(onEndCallback, 1000);
+                }
             };
 
             synth.speak(utterance);
         }
 
-        function playLoop() {
-            if (!isRunning) return;
+        function playStep() {
+            if (!isRunning || isPaused) return;
 
             const list = categories[currentCategory];
             const currentItem = list[currentIndex];
-            
+
             document.getElementById('displayPhrase').innerText = currentItem.en;
             document.getElementById('displayTranslation').innerText = currentItem.es;
+            document.getElementById('displayCounter').innerText = `Repetición ${repeatCount + 1} de 3`;
 
-            let repeatCount = 0;
-
-            function repeat() {
-                if (!isRunning) return;
-
-                if (repeatCount < 3) {
-                    repeatCount++;
-                    speakPhrase(currentItem.en, repeat);
-                } else {
+            speakPhrase(currentItem.en, () => {
+                repeatCount++;
+                if (repeatCount >= 3) {
+                    repeatCount = 0;
                     currentIndex = (currentIndex + 1) % list.length;
-                    playLoop();
                 }
-            }
-
-            repeat();
+                playStep();
+            });
         }
 
         function startShadowing() {
             if (isRunning) return;
             isRunning = true;
-            playLoop();
+            isPaused = false;
+            updateButtons();
+            playStep();
+        }
+
+        function togglePause() {
+            if (!isRunning && !isPaused) return;
+
+            if (isPaused) {
+                isPaused = false;
+                isRunning = true;
+                updateButtons();
+                playStep();
+            } else {
+                isPaused = true;
+                isRunning = false;
+                synth.cancel();
+                clearTimeout(speechTimer);
+                updateButtons();
+                document.getElementById('displayCounter').innerText = "PAUSADO";
+            }
         }
 
         function toggleSlow() {
             isSlow = !isSlow;
-            const btn = document.querySelector('.btn-slow');
+            const btn = document.getElementById('btnSlow');
             btn.innerText = `Modo Lento: ${isSlow ? 'ON' : 'OFF'}`;
             btn.style.background = isSlow ? '#ff9800' : '#ffc107';
         }
 
         function stopShadowing() {
             isRunning = false;
+            isPaused = false;
+            repeatCount = 0;
             synth.cancel();
+            clearTimeout(speechTimer);
+            updateButtons();
             document.getElementById('displayPhrase').innerText = "Detenido";
             document.getElementById('displayTranslation').innerText = "";
+            document.getElementById('displayCounter').innerText = "";
         }
+
+        // --- MÓDULO TABLA DE HÁBITOS ---
+        const habitMetrics = [
+            { id: "agua", name: "AGUA", desc: "2.5 Lts" },
+            { id: "alimentacion", name: "ALIMENTACIÓN", desc: "40% 40% 20%" },
+            { id: "descanso", name: "DESCANSO", desc: "8 hs" },
+            { id: "ejercicios", name: "EJERCICIOS", desc: "4 Días" },
+            { id: "trabajo", name: "TRABAJO", desc: "9 hs / $140" }
+        ];
+
+        const days = ["L", "M", "Mi", "J", "V", "S", "D"];
+
+        function loadHabitsData() {
+            const saved = localStorage.getItem('habitsData');
+            return saved ? JSON.parse(saved) : {};
+        }
+
+        function saveHabitsData(data) {
+            localStorage.setItem('habitsData', JSON.stringify(data));
+        }
+
+        function renderHabitsTable() {
+            const data = loadHabitsData();
+            const tbody = document.getElementById('habitsBody');
+            tbody.innerHTML = "";
+
+            habitMetrics.forEach(metric => {
+                const tr = document.createElement('tr');
+                
+                let html = `<td class="habit-title">${metric.name} <span class="habit-desc">${metric.desc}</span></td>`;
+
+                days.forEach((day, index) => {
+                    const key = `${metric.id}_${index}`;
+                    const state = data[key] || 0; // 0: vacio, 1: check, 2: cross
+                    
+                    let symbol = "";
+                    let stateClass = "";
+                    if (state === 1) { symbol = "✓"; stateClass = "done"; }
+                    if (state === 2) { symbol = "✕"; stateClass = "fail"; }
+
+                    html += `
+                        <td>
+                            <div class="state-btn ${stateClass}" onclick="toggleHabitState('${key}')">${symbol}</div>
+                        </td>
+                    `;
+                });
+
+                tr.innerHTML = html;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function toggleHabitState(key) {
+            const data = loadHabitsData();
+            let currentState = data[key] || 0;
+            currentState = (currentState + 1) % 3; // Rotación: 0 -> 1 (✓) -> 2 (✕) -> 0
+            
+            data[key] = currentState;
+            saveHabitsData(data);
+            renderHabitsTable();
+        }
+
+        function resetHabits() {
+            if (confirm("¿Quieres reiniciar el registro de la semana?")) {
+                localStorage.removeItem('habitsData');
+                renderHabitsTable();
+            }
+        }
+
+        // Inicialización de la tabla al cargar
+        renderHabitsTable();
     </script>
 </body>
 </html>
