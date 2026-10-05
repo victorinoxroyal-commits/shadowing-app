@@ -1,316 +1,196 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>English Shadowing App</title>
-  
-  <!-- Configuración PWA / Modo App Pantalla Completa en iOS y Android -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Shadowing App">
-  <meta name="theme-color" content="#121212">
-
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    }
-
-    body {
-      background-color: #121212;
-      color: #ffffff;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      min-height: 100vh;
-      padding: 20px;
-      -webkit-user-select: none;
-      user-select: none;
-    }
-
-    header {
-      text-align: center;
-      margin-top: 10px;
-    }
-
-    h1 {
-      font-size: 1.4rem;
-      color: #00d2ff;
-      margin-bottom: 5px;
-    }
-
-    .subtitle {
-      font-size: 0.85rem;
-      color: #a0a0a0;
-    }
-
-    .category-select {
-      width: 100%;
-      padding: 12px;
-      margin-top: 15px;
-      background-color: #1e1e1e;
-      color: #00d2ff;
-      border: 1px solid #333;
-      border-radius: 10px;
-      font-size: 1rem;
-      outline: none;
-    }
-
-    .display-card {
-      background: #1e1e1e;
-      border-radius: 16px;
-      padding: 25px 20px;
-      text-align: center;
-      margin: 20px 0;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-      border: 1px solid #2a2a2a;
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    .phrase-en {
-      font-size: 1.6rem;
-      font-weight: 600;
-      color: #ffffff;
-      margin-bottom: 12px;
-      line-height: 1.3;
-    }
-
-    .phrase-es {
-      font-size: 1.1rem;
-      color: #8e8e93;
-      font-weight: 400;
-    }
-
-    .controls-panel {
-      background-color: #1e1e1e;
-      border-radius: 16px;
-      padding: 15px;
-      margin-bottom: 15px;
-    }
-
-    .control-group {
-      margin-bottom: 12px;
-    }
-
-    .control-group:last-child {
-      margin-bottom: 0;
-    }
-
-    .control-label {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.85rem;
-      color: #a0a0a0;
-      margin-bottom: 5px;
-    }
-
-    input[type=range] {
-      width: 100%;
-      accent-color: #00d2ff;
-    }
-
-    .actions {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 10px;
-    }
-
-    button {
-      padding: 16px;
-      border: none;
-      border-radius: 12px;
-      font-size: 1.1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: opacity 0.2s, transform 0.1s;
-    }
-
-    button:active {
-      transform: scale(0.98);
-    }
-
-    .btn-play {
-      background-color: #00d2ff;
-      color: #000000;
-      grid-column: span 2;
-    }
-
-    .btn-next {
-      background-color: #2c2c2e;
-      color: #ffffff;
-    }
-
-    .btn-stop {
-      background-color: #ff3b30;
-      color: #ffffff;
-    }
-
-    .btn-active {
-      opacity: 0.8;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Configuración para App Nativa en iPhone -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Shadowing">
+    <link rel="apple-touch-icon" href="https://img.icons8.com/color/180/000000/headphones.png">
+    
+    <title>Shadowing Driver</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; background: #121212; color: white; padding: 20px; margin: 0; }
+        h1 { font-size: 24px; margin-bottom: 10px; color: #f8f9fa; }
+        .category-container { margin: 15px 0; }
+        select { background: #2a2a2a; color: #00ffcc; border: 1px solid #00ffcc; padding: 12px; font-size: 16px; border-radius: 8px; width: 90%; max-width: 400px; outline: none; }
+        .phrase-card { background: #1e1e1e; border-radius: 12px; padding: 25px 15px; margin: 20px auto; max-width: 500px; min-height: 120px; display: flex; flex-direction: column; justify-content: center; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        .phrase { font-size: 22px; color: #00ffcc; font-weight: bold; margin-bottom: 8px; }
+        .translation { font-size: 16px; color: #aaa; font-style: italic; }
+        .controls { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: 15px; }
+        button { border: none; padding: 14px 22px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; transition: 0.2s; }
+        .btn-start { background: #28a745; color: white; }
+        .btn-slow { background: #ffc107; color: #121212; }
+        .btn-stop { background: #dc3545; color: white; }
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
+    </style>
 </head>
 <body>
 
-  <header>
-    <h1>Shadowing Hands-Free</h1>
-    <p class="subtitle">Práctica oral de inglés en bucle</p>
+    <h1>Shadowing en Ruta</h1>
     
-    <select id="categorySelect" class="category-select" onchange="changeCategory()">
-      <option value="daily">Frases Cotidianas / Trabajo</option>
-      <option value="driving">Conducción y Entrega</option>
-      <option value="conversation">Conversación Fluida</option>
-    </select>
-  </header>
-
-  <main class="display-card">
-    <div id="phraseEn" class="phrase-en">Presiona reproducir para iniciar</div>
-    <div id="phraseEs" class="phrase-es">Press play to start</div>
-  </main>
-
-  <section class="controls-panel">
-    <div class="control-group">
-      <div class="control-label">
-        <span>Velocidad de voz</span>
-        <span id="rateValue">0.85x</span>
-      </div>
-      <input type="range" id="rate" min="0.5" max="1.2" step="0.05" value="0.85" oninput="updateRateLabel(this.value)">
+    <div class="category-container">
+        <label for="categorySelect" style="display:block; margin-bottom:8px; color:#ccc;">Selecciona Categoría:</label>
+        <select id="categorySelect" onchange="changeCategory()">
+            <option value="delivery">🚚 Trabajo (Deliveries)</option>
+            <option value="questions">❓ Preguntas y Conversación</option>
+            <option value="compliments">😊 Cumplidos y Amabilidad</option>
+            <option value="gym">🏋️ Gimnasio (Gym)</option>
+            <option value="pool">🏊 Piscina / Áreas Recreativas</option>
+            <option value="restaurant">🍽️ Restaurantes y Bares</option>
+            <option value="nightlife">🕺 Discoteca / Salidas</option>
+        </select>
     </div>
 
-    <div class="control-group">
-      <div class="control-label">
-        <span>Pausa entre repeticiones</span>
-        <span id="delayValue">2.5s</span>
-      </div>
-      <input type="range" id="delay" min="1" max="6" step="0.5" value="2.5" oninput="updateDelayLabel(this.value)">
+    <div class="phrase-card">
+        <div class="phrase" id="displayPhrase">Presiona "Iniciar" para comenzar</div>
+        <div class="translation" id="displayTranslation"></div>
     </div>
-  </section>
+    
+    <div class="controls">
+        <button class="btn-start" onclick="startShadowing()">Iniciar</button>
+        <button class="btn-slow" onclick="toggleSlow()">Modo Lento: OFF</button>
+        <button class="btn-stop" onclick="stopShadowing()">Detener</button>
+    </div>
 
-  <footer class="actions">
-    <button id="btnPlay" class="btn-play" onclick="togglePlay()">Reproducir en Bucle</button>
-    <button class="btn-next" onclick="nextPhrase()">Siguiente</button>
-    <button class="btn-stop" onclick="stopAudio()">Detener</button>
-  </footer>
+    <script>
+        const categories = {
+            delivery: [
+                { en: "Leave it at the door", es: "Déjelo en la puerta" },
+                { en: "On my way", es: "En camino" },
+                { en: "Your order is here", es: "Su pedido está aquí" },
+                { en: "I am at the gate", es: "Estoy en el portón" },
+                { en: "Which apartment number?", es: "¿Qué número de apartamento?" },
+                { en: "I have a delivery for you", es: "Tengo una entrega para ti" },
+                { en: "Could you open the gate, please?", es: "¿Podría abrir el portón, por favor?" },
+                { en: "Have a great day!", es: "¡Que tengas un gran día!" }
+            ],
+            questions: [
+                { en: "How do you say that?", es: "¿Cómo se dice?" },
+                { en: "How does this work?", es: "¿Cómo funciona esto?" },
+                { en: "How do you spell that?", es: "¿Cómo se escribe?" },
+                { en: "How do you know that?", es: "¿Cómo lo sabes?" },
+                { en: "How much is it?", es: "¿Cuánto cuesta?" },
+                { en: "How long will it take?", es: "¿Cuánto tardará?" },
+                { en: "How long have you been here?", es: "¿Cuánto tiempo llevas aquí?" },
+                { en: "How often do you go?", es: "¿Cada cuánto vas?" },
+                { en: "Where are you going?", es: "¿A dónde vas?" },
+                { en: "Where do you work?", es: "¿Dónde trabajas?" },
+                { en: "Where can I find it?", es: "¿Dónde puedo encontrarlo?" },
+                { en: "Where is the restroom?", es: "¿Dónde está el baño?" },
+                { en: "Can you help me?", es: "¿Puedes ayudarme?" },
+                { en: "Can I ask you something?", es: "¿Te puedo preguntar una cosa?" },
+                { en: "Could you repeat that?", es: "¿Puedes repetir?" },
+                { en: "Do you want to come?", es: "¿Quieres venir?" },
+                { en: "Do you agree?", es: "¿Estás de acuerdo?" },
+                { en: "Do you know what I mean?", es: "¿Sabes a qué me refiero?" },
+                { en: "I'd love to, but I can't", es: "Me gustaría, pero no puedo" }
+            ],
+            compliments: [
+                { en: "I love your vibe!", es: "¡Me encanta tu vibra!" },
+                { en: "You have a great smile", es: "Tienes una sonrisa muy bonita" },
+                { en: "How are you so sweet?", es: "¿Cómo haces para ser tan dulce?" },
+                { en: "Are your lips that sweet too?", es: "¿Tus labios también son muy dulces?" },
+                { en: "That’s really nice of you, thanks!", es: "Es muy amable de tu parte, ¡gracias!" },
+                { en: "Hope you have an awesome day!", es: "¡Espero que tengas un día increíble!" }
+            ],
+            gym: [
+                { en: "Are you using this machine?", es: "¿Estás usando esta máquina?" },
+                { en: "How many sets do you have left?", es: "¿Cuántas series te quedan?" },
+                { en: "Can I work in with you?", es: "¿Puedo alternar contigo?" },
+                { en: "Could you give me a spot?", es: "¿Me puedes cuidar en esta repetición?" },
+                { en: "Thanks, appreciate it!", es: "¡Gracias, lo aprecio!" }
+            ],
+            pool: [
+                { en: "Is this chair taken?", es: "¿Esta silla está ocupada?" },
+                { en: "Where are the showers?", es: "¿Dónde están las duchas?" },
+                { en: "What time does the pool close?", es: "¿A qué hora cierra la piscina?" }
+            ],
+            restaurant: [
+                { en: "Table for two, please", es: "Mesa para dos, por favor" },
+                { en: "What do you recommend?", es: "¿Qué me recomiendas?" },
+                { en: "Could we get the check, please?", es: "¿Nos trae la cuenta, por favor?" },
+                { en: "Is everything included in the bill?", es: "¿Está todo incluido en la cuenta?" }
+            ],
+            nightlife: [
+                { en: "Excuse me, can I get through?", es: "Disculpa, ¿puedo pasar?" },
+                { en: "Great music tonight, right?", es: "Buena música esta noche, ¿verdad?" },
+                { en: "What are you drinking?", es: "¿Qué estás tomando?" }
+            ]
+        };
 
-  <script>
-    const database = {
-      daily: [
-        { en: "I'm on my way right now.", es: "Estoy en camino en este momento." },
-        { en: "Could you please confirm the address?", es: "¿Podrías confirmar la dirección, por favor?" },
-        { en: "Have a great rest of your day!", es: "¡Que tengas un buen resto del día!" },
-        { en: "I just dropped off the package at the front door.", es: "Acabo de dejar el paquete en la puerta principal." },
-        { en: "Sorry for the delay, traffic was heavy.", es: "Disculpa la demora, había mucho tráfico." }
-      ],
-      driving: [
-        { en: "Turn left at the next traffic light.", es: "Gira a la izquierda en el próximo semáforo." },
-        { en: "I'll be there in about five minutes.", es: "Estaré allí en unos cinco minutos." },
-        { en: "Is there a specific gate code I need?", es: "¿Hay algún código de acceso específico que necesite?" },
-        { en: "Please leave a message if I miss your call.", es: "Por favor deja un mensaje si no contesto tu llamada." },
-        { en: "Where would you like me to leave this?", es: "¿Dónde te gustaría que deje esto?" }
-      ],
-      conversation: [
-        { en: "That sounds like a great plan.", es: "Eso suena como un excelente plan." },
-        { en: "Let me know if you need anything else.", es: "Avisame si necesitas algo más." },
-        { en: "I really appreciate your help with this.", es: "Realmente aprecio tu ayuda con esto." },
-        { en: "Take your time, no rush at all.", es: "Tómate tu tiempo, sin ninguna prisa." },
-        { en: "Hope you have a wonderful weekend!", es: "¡Espero que tengas un excelente fin de semana!" }
-      ]
-    };
+        let currentCategory = "delivery";
+        let currentIndex = 0;
+        let isRunning = false;
+        let isSlow = false;
+        const synth = window.speechSynthesis;
 
-    let currentCategory = 'daily';
-    let currentIndex = 0;
-    let isPlaying = false;
-    let loopTimeout = null;
+        function changeCategory() {
+            stopShadowing();
+            currentCategory = document.getElementById('categorySelect').value;
+            currentIndex = 0;
+            document.getElementById('displayPhrase').innerText = "Categoría lista. Presiona Iniciar.";
+            document.getElementById('displayTranslation').innerText = "";
+        }
 
-    const synth = window.speechSynthesis;
+        function speakPhrase(text, callback) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = isSlow ? 0.7 : 0.95;
+            
+            utterance.onend = () => {
+                setTimeout(callback, 3000);
+            };
 
-    function updateRateLabel(val) {
-      document.getElementById('rateValue').textContent = `${val}x`;
-    }
+            synth.speak(utterance);
+        }
 
-    function updateDelayLabel(val) {
-      document.getElementById('delayValue').textContent = `${val}s`;
-    }
+        function playLoop() {
+            if (!isRunning) return;
 
-    function changeCategory() {
-      currentCategory = document.getElementById('categorySelect').value;
-      currentIndex = 0;
-      stopAudio();
-      updateDisplay();
-    }
+            const list = categories[currentCategory];
+            const currentItem = list[currentIndex];
+            
+            document.getElementById('displayPhrase').innerText = currentItem.en;
+            document.getElementById('displayTranslation').innerText = currentItem.es;
 
-    function updateDisplay() {
-      const current = database[currentCategory][currentIndex];
-      document.getElementById('phraseEn').textContent = current.en;
-      document.getElementById('phraseEs').textContent = current.es;
-    }
+            let repeatCount = 0;
 
-    function speakCurrentPhrase() {
-      if (!isPlaying) return;
+            function repeat() {
+                if (!isRunning) return;
 
-      synth.cancel(); // Limpia pronunciaciones anteriores pendientres
+                if (repeatCount < 3) {
+                    repeatCount++;
+                    speakPhrase(currentItem.en, repeat);
+                } else {
+                    currentIndex = (currentIndex + 1) % list.length;
+                    playLoop();
+                }
+            }
 
-      const current = database[currentCategory][currentIndex];
-      const utterance = new SpeechSynthesisUtterance(current.en);
-      
-      utterance.lang = 'en-US';
-      utterance.rate = parseFloat(document.getElementById('rate').value);
+            repeat();
+        }
 
-      utterance.onend = () => {
-        if (!isPlaying) return;
-        const delay = parseFloat(document.getElementById('delay').value) * 1000;
-        loopTimeout = setTimeout(() => {
-          speakCurrentPhrase();
-        }, delay);
-      };
+        function startShadowing() {
+            if (isRunning) return;
+            isRunning = true;
+            playLoop();
+        }
 
-      utterance.onerror = () => {
-        if (isPlaying) stopAudio();
-      };
+        function toggleSlow() {
+            isSlow = !isSlow;
+            const btn = document.querySelector('.btn-slow');
+            btn.innerText = `Modo Lento: ${isSlow ? 'ON' : 'OFF'}`;
+            btn.style.background = isSlow ? '#ff9800' : '#ffc107';
+        }
 
-      synth.speak(utterance);
-    }
-
-    function togglePlay() {
-      if (isPlaying) {
-        stopAudio();
-      } else {
-        isPlaying = true;
-        document.getElementById('btnPlay').textContent = 'Pausar';
-        document.getElementById('btnPlay').style.backgroundColor = '#ffcc00';
-        speakCurrentPhrase();
-      }
-    }
-
-    function nextPhrase() {
-      clearTimeout(loopTimeout);
-      synth.cancel();
-      
-      currentIndex = (currentIndex + 1) % database[currentCategory].length;
-      updateDisplay();
-
-      if (isPlaying) {
-        speakCurrentPhrase();
-      }
-    }
-
-    function stopAudio() {
-      isPlaying = false;
-      clearTimeout(loopTimeout);
-      synth.cancel();
-      document.getElementById('btnPlay').textContent = 'Reproducir en Bucle';
-      document.getElementById('btnPlay').style.backgroundColor = '#00d2ff';
-    }
-
-    // Inicializar visualización al cargar
-    updateDisplay();
-  </script>
+        function stopShadowing() {
+            isRunning = false;
+            synth.cancel();
+            document.getElementById('displayPhrase').innerText = "Detenido";
+            document.getElementById('displayTranslation').innerText = "";
+        }
+    </script>
 </body>
 </html>
