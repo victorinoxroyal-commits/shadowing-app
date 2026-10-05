@@ -197,3 +197,120 @@
     <button id="btnPlay" class="btn-play" onclick="togglePlay()">Reproducir en Bucle</button>
     <button class="btn-next" onclick="nextPhrase()">Siguiente</button>
     <button class="btn-stop" onclick="stopAudio()">Detener</button>
+  </footer>
+
+  <script>
+    const database = {
+      daily: [
+        { en: "I'm on my way right now.", es: "Estoy en camino en este momento." },
+        { en: "Could you please confirm the address?", es: "¿Podrías confirmar la dirección, por favor?" },
+        { en: "Have a great rest of your day!", es: "¡Que tengas un buen resto del día!" },
+        { en: "I just dropped off the package at the front door.", es: "Acabo de dejar el paquete en la puerta principal." },
+        { en: "Sorry for the delay, traffic was heavy.", es: "Disculpa la demora, había mucho tráfico." }
+      ],
+      driving: [
+        { en: "Turn left at the next traffic light.", es: "Gira a la izquierda en el próximo semáforo." },
+        { en: "I'll be there in about five minutes.", es: "Estaré allí en unos cinco minutos." },
+        { en: "Is there a specific gate code I need?", es: "¿Hay algún código de acceso específico que necesite?" },
+        { en: "Please leave a message if I miss your call.", es: "Por favor deja un mensaje si no contesto tu llamada." },
+        { en: "Where would you like me to leave this?", es: "¿Dónde te gustaría que deje esto?" }
+      ],
+      conversation: [
+        { en: "That sounds like a great plan.", es: "Eso suena como un excelente plan." },
+        { en: "Let me know if you need anything else.", es: "Avisame si necesitas algo más." },
+        { en: "I really appreciate your help with this.", es: "Realmente aprecio tu ayuda con esto." },
+        { en: "Take your time, no rush at all.", es: "Tómate tu tiempo, sin ninguna prisa." },
+        { en: "Hope you have a wonderful weekend!", es: "¡Espero que tengas un excelente fin de semana!" }
+      ]
+    };
+
+    let currentCategory = 'daily';
+    let currentIndex = 0;
+    let isPlaying = false;
+    let loopTimeout = null;
+
+    const synth = window.speechSynthesis;
+
+    function updateRateLabel(val) {
+      document.getElementById('rateValue').textContent = `${val}x`;
+    }
+
+    function updateDelayLabel(val) {
+      document.getElementById('delayValue').textContent = `${val}s`;
+    }
+
+    function changeCategory() {
+      currentCategory = document.getElementById('categorySelect').value;
+      currentIndex = 0;
+      stopAudio();
+      updateDisplay();
+    }
+
+    function updateDisplay() {
+      const current = database[currentCategory][currentIndex];
+      document.getElementById('phraseEn').textContent = current.en;
+      document.getElementById('phraseEs').textContent = current.es;
+    }
+
+    function speakCurrentPhrase() {
+      if (!isPlaying) return;
+
+      synth.cancel(); // Limpia pronunciaciones anteriores pendientres
+
+      const current = database[currentCategory][currentIndex];
+      const utterance = new SpeechSynthesisUtterance(current.en);
+      
+      utterance.lang = 'en-US';
+      utterance.rate = parseFloat(document.getElementById('rate').value);
+
+      utterance.onend = () => {
+        if (!isPlaying) return;
+        const delay = parseFloat(document.getElementById('delay').value) * 1000;
+        loopTimeout = setTimeout(() => {
+          speakCurrentPhrase();
+        }, delay);
+      };
+
+      utterance.onerror = () => {
+        if (isPlaying) stopAudio();
+      };
+
+      synth.speak(utterance);
+    }
+
+    function togglePlay() {
+      if (isPlaying) {
+        stopAudio();
+      } else {
+        isPlaying = true;
+        document.getElementById('btnPlay').textContent = 'Pausar';
+        document.getElementById('btnPlay').style.backgroundColor = '#ffcc00';
+        speakCurrentPhrase();
+      }
+    }
+
+    function nextPhrase() {
+      clearTimeout(loopTimeout);
+      synth.cancel();
+      
+      currentIndex = (currentIndex + 1) % database[currentCategory].length;
+      updateDisplay();
+
+      if (isPlaying) {
+        speakCurrentPhrase();
+      }
+    }
+
+    function stopAudio() {
+      isPlaying = false;
+      clearTimeout(loopTimeout);
+      synth.cancel();
+      document.getElementById('btnPlay').textContent = 'Reproducir en Bucle';
+      document.getElementById('btnPlay').style.backgroundColor = '#00d2ff';
+    }
+
+    // Inicializar visualización al cargar
+    updateDisplay();
+  </script>
+</body>
+</html>
